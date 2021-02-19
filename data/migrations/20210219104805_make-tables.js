@@ -5,7 +5,7 @@ exports.up = function(knex) {
       .notNullable()
     tbl.string("project_description")
     tbl.boolean("project_completed")
-      .notNullable()
+      .defaultTo(false)
   })
     .createTable("Resources", tbl => {
       tbl.increments("resource_id")
@@ -20,7 +20,7 @@ exports.up = function(knex) {
         .notNullable()
       tbl.string("notes")
       tbl.boolean("task_completed")
-        .notNullable()
+        .defaultTo(false)
       tbl.integer("project_id")
         .unsigned()
         .notNullable()
@@ -51,7 +51,7 @@ exports.up = function(knex) {
 exports.down = function(knex) {
   return knex.schema
     .dropTableIfExists("Project_Resources")
-    .dropTableIfExists("Task")
+    .dropTableIfExists("Tasks")
     .dropTableIfExists("Resources")
-  .dropTableIfExists("Projects")
+    .dropTableIfExists("Projects")
 };

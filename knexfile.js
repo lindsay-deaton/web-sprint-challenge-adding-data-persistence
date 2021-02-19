@@ -3,13 +3,23 @@ const sharedConfig = {
   client: 'sqlite3',
   useNullAsDefault: true,
   migrations: { directory: './data/migrations' },
-  pool: { afterCreate: (conn, done) => conn.run('PRAGMA foreign_keys = ON', done) },
+  pool: { afterCreate: (conn, done) => conn.run('PRAGMA foreign_keys = ON', done) },     
 }
 
 module.exports = {
   development: {
     ...sharedConfig,
-    connection: { filename: './data/lambda.db3' },
+    connection: {
+      typeCast: (field, next) => {
+    console.log('TypeCasting', field.type, field.length);
+    if (field.type == 'TINY' && field.length == 1) {
+        let value = field.string();
+        return value ? (value == '1') : null;
+    }
+    return next();
+      },
+      filename: './data/lambda.db3'
+    },
   },
   testing: {
     ...sharedConfig,
